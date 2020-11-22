@@ -5,98 +5,624 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Brauanlage_WPF"
         mc:Ignorable="d"
-        Title="Brauanlage - Steuerung" Height="720" Width="1280" MinHeight="600" MinWidth="800" ResizeMode="CanResizeWithGrip">
+        Title="Brauanlagensteuerung" Height="720" Width="1280" MinHeight="600" MinWidth="800" ResizeMode="CanResizeWithGrip">
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition/>
-            <RowDefinition Height="25"/>
+            <RowDefinition />
+            <RowDefinition Height="25" />
         </Grid.RowDefinitions>
 
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*" MinWidth="260" MaxWidth="280"/>
-            <ColumnDefinition Width="1"/>
-            <ColumnDefinition Width="4*"/>
+            <ColumnDefinition Width="*" MinWidth="260" MaxWidth="280" />
+            <ColumnDefinition Width="1" />
+            <ColumnDefinition Width="4*" />
         </Grid.ColumnDefinitions>
-        
+
         <!--#region Vertical Separator-->
 
-        <Rectangle Grid.Column="1" Grid.Row="0" Margin="0,5" Fill="Black"/>
+        <Rectangle Grid.Column="1" Grid.Row="0" Margin="0,5" Fill="Black" />
 
         <!--#endregion-->
-        
+
         <!--#region Status Bar-->
         <StatusBar Grid.Row="1" Grid.ColumnSpan="3">
             <StatusBarItem>
-                <Image x:Name="_statImage" Source="Images/information.png"/>
+                <Image x:Name="_statImage" Source="Images/information.png" />
             </StatusBarItem>
             <StatusBarItem>
-                <TextBlock x:Name="_statText" Text="Brauanlage - Steuerung wurde gestartet!"/>
+                <TextBlock x:Name="_statText" Text="Brauanlagensteuerung wurde gestartet!" />
             </StatusBarItem>
         </StatusBar>
 
         <!--#endregion-->
-        
+
         <!--#region Navigation Bar-->
-        <StackPanel Grid.Column="0" Grid.Row="0">            
+        <StackPanel Grid.Column="0" Grid.Row="0">
             <Button x:Name="nav_HomePage" Margin="10,10,10,0" Height="30" FontWeight="Bold" Click="nav_HomePage_Click">
                 <Button.Effect>
-                    <DropShadowEffect Color="#FF727272" ShadowDepth="2"/>
+                    <DropShadowEffect Color="#FF727272" ShadowDepth="2" />
                 </Button.Effect>
                 <StackPanel Orientation="Horizontal">
-                    <Image Source="Images/application_home.png" Height="16" Width="16"/>
-                    <Label Content="Startseite"/>
+                    <Image Source="Images/application_home.png" Height="16" Width="16" Margin="0" />
+                    <Label Content="Startseite" />
                 </StackPanel>
-
             </Button>
-            
-            <Separator Margin="10 10 10 0" Height="11"/>
+
+            <Separator Margin="10 10 10 0" Height="11" />
 
             <Button x:Name="nav_RecipePage" Margin="10,10,10,0" Height="30" FontWeight="Bold" Click="nav_RecipePage_Click">
                 <Button.Effect>
-                    <DropShadowEffect Color="#FF727272" ShadowDepth="2"/>
+                    <DropShadowEffect Color="#FF727272" ShadowDepth="2" />
                 </Button.Effect>
                 <StackPanel Orientation="Horizontal">
-                    <Image Source="Images/book_open.png" Height="16" Width="16"/>
-                    <Label Content="Rezepte"/>
+                    <Image Source="Images/book_open.png" Height="16" Width="16" Margin="0" />
+                    <Label Content="Rezepte" />
                 </StackPanel>
             </Button>
 
             <Button x:Name="navConnPage" Margin="10,10,10,0" Height="30" FontWeight="Bold" Click="navConnPage_Click">
                 <Button.Effect>
-                    <DropShadowEffect Color="#FF727272" ShadowDepth="2"/>
+                    <DropShadowEffect Color="#FF727272" ShadowDepth="2" />
                 </Button.Effect>
                 <StackPanel Orientation="Horizontal">
-                    <Image Source="Images/server_go.png" Height="16" Width="16"/>
-                    <Label Content="Verbindung"/>
+                    <Image Source="Images/server_go.png" Height="16" Width="16" />
+                    <Label Content="Verbindung" />
                 </StackPanel>
             </Button>
 
-            <Separator Margin="10 10 10 0" Height="11"/>
+            <Separator Margin="10 10 10 0" Height="11" />
 
             <Button x:Name="navSettings" Margin="10,10,10,0" Height="30" FontWeight="Bold" VerticalAlignment="Bottom" Click="navSettings_Click">
                 <Button.Effect>
-                    <DropShadowEffect Color="#FF727272" ShadowDepth="2"/>
+                    <DropShadowEffect Color="#FF727272" ShadowDepth="2" />
                 </Button.Effect>
                 <StackPanel Orientation="Horizontal">
-                    <Image Source="Images/wrench.png" Height="16" Width="16"/>
-                    <Label Content="Einstellungen"/>
+                    <Image Source="Images/wrench.png" Height="16" Width="16" />
+                    <Label Content="Einstellungen" />
                 </StackPanel>
             </Button>
         </StackPanel>
         <!--#endregion-->
-        
+
         <!--#region Content-->
         <DockPanel  Margin="10 10 10 10" Grid.Row="0" Grid.Column="2">
-            <Label DockPanel.Dock="Top" x:Name="Header" Content="Header" Height="35" FontSize="18" FontWeight="Bold"/>
+            <Label DockPanel.Dock="Top" x:Name="Header" Content="Header" Height="35" FontSize="18" FontWeight="Bold" />
+            <Grid>
+                <TabControl x:Name="TabMain" TabStripPlacement="Bottom">
+                    <!--#region Startseite-->
+                    <TabItem Header="Startseite" Height="30" Visibility="Visible">
+                        Startseite
+                    </TabItem>
+                    <!--#endregion-->
+                    <!--#region Rezepte-->
+                    <TabItem Header="Rezepte" Height="30" Visibility="Visible">
+                        <Grid DataContext="{Binding SelectedItem, ElementName=lstRecipe}">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="98*" />
+                                <ColumnDefinition Width="99*" />
+                            </Grid.ColumnDefinitions>
 
-            <ScrollViewer HorizontalAlignment="Stretch" VerticalAlignment="Stretch" MinHeight="500">
-                <Frame x:Name="_NavigationFrame" NavigationUIVisibility="Hidden" />
-            </ScrollViewer>
-            
+                            <ListView x:Name="lstRecipe" Margin="10" Grid.Column="0">
+                                <ListView.View>
+                                    <GridView>
+                                        <GridView.Columns>
+                                            <GridViewColumn Header="Name" Width="150" DisplayMemberBinding="{Binding Name}" />
+                                            <GridViewColumn Header="Sorte" Width="140" DisplayMemberBinding="{Binding Sorte}" />
+                                            <GridViewColumn Header="Stammwürze" Width="75" DisplayMemberBinding="{Binding Stammwuerze}" />
+                                            <GridViewColumn Header="Alkohol" Width="65" DisplayMemberBinding="{Binding Alkohol}" />
+                                        </GridView.Columns>
+                                    </GridView>
+                                </ListView.View>
+                            </ListView>
+                            <ScrollViewer Grid.Column="1">
+                                <StackPanel Orientation="Vertical" Margin="10">
+                                    <TextBlock Text="{Binding Name}" HorizontalAlignment="Center" FontSize="14" FontWeight="Bold" />
+                                    <TextBlock Text="{Binding Sorte}" HorizontalAlignment="Center" FontSize="14" />
+                                    <TextBlock Text="{Binding Ausschlagswuerze, StringFormat='Für {0}l Ausschlagwürze'}" HorizontalAlignment="Center" FontSize="14" />
+                                    <TextBlock Text="{Binding Sudhausausbeute, StringFormat='Bei {0}% Sudhausausbeute'}" HorizontalAlignment="Center" FontSize="14" />
+
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                        <TextBlock Text="{Binding Stammwuerze, StringFormat='Stammwürze: {0}% | '}" HorizontalAlignment="Center" FontSize="14" FontWeight="Bold" />
+                                        <TextBlock Text="{Binding Bittere, StringFormat='Bittere: {0} IBU | '}" HorizontalAlignment="Center" FontSize="14" FontWeight="Bold" />
+                                        <TextBlock Text="{Binding Farbe, StringFormat='Farbe: {0} EBC | '}" HorizontalAlignment="Center" FontSize="14" FontWeight="Bold" />
+                                        <TextBlock Text="{Binding Alkohol, StringFormat='Alkohol: {0} %'}" HorizontalAlignment="Center" FontSize="14" FontWeight="Bold" />
+                                    </StackPanel>
+
+                                    <TextBlock Text="{Binding Kurzbeschreibung}" HorizontalAlignment="Center" FontSize="14" FontStyle="Italic" TextAlignment="Center" TextWrapping="WrapWithOverflow" />
+
+                                    <TextBlock Text="Brauwasser" HorizontalAlignment="Left" FontSize="17" FontWeight="Bold" TextAlignment="Left" />
+
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                        <TextBlock Text="{Binding Infusion_Hauptguss, StringFormat='Hauptguss: {0}l | '}" HorizontalAlignment="Center" FontSize="14" />
+                                        <TextBlock Text="{Binding Nachguss, StringFormat='Nachguss: {0}l'}" HorizontalAlignment="Center" FontSize="14" />
+                                    </StackPanel>
+
+                                    <TextBlock Text="Schüttung" HorizontalAlignment="Left" FontSize="17" FontWeight="Bold" TextAlignment="Left" />
+
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                        <StackPanel.Style>
+                                            <Style TargetType="StackPanel">
+                                                <Setter Property="Visibility" Value="Visible" />
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding Malz1, TargetNullValue=''}" Value="">
+                                                        <Setter Property="Visibility" Value="Hidden" />
+                                                        <Setter Property="Height" Value="0" />
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </StackPanel.Style>
+                                        <TextBlock Text="{Binding Malz1, StringFormat=' {0}:'}" HorizontalAlignment="Center" FontSize="14" />
+                                        <TextBlock Text="{Binding Malz1_Menge, StringFormat=' {0}'}" HorizontalAlignment="Center" FontSize="14" />
+                                        <TextBlock Text="{Binding Malz1_Einheit, StringFormat=' {0}'}" HorizontalAlignment="Center" FontSize="14" />
+                                    </StackPanel>
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                        <StackPanel.Style>
+                                            <Style TargetType="StackPanel">
+                                                <Setter Property="Visibility" Value="Visible" />
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding Malz2, TargetNullValue=''}" Value="">
+                                                        <Setter Property="Visibility" Value="Hidden" />
+                                                        <Setter Property="Height" Value="0" />
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </StackPanel.Style>
+                                        <TextBlock Text="{Binding Malz2, StringFormat=' {0}:'}" HorizontalAlignment="Center" FontSize="14" />
+                                        <TextBlock Text="{Binding Malz2_Menge, StringFormat=' {0}'}" HorizontalAlignment="Center" FontSize="14" />
+                                        <TextBlock Text="{Binding Malz2_Einheit, StringFormat=' {0}'}" HorizontalAlignment="Center" FontSize="14" />
+                                    </StackPanel>
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                        <StackPanel.Style>
+                                            <Style TargetType="StackPanel">
+                                                <Setter Property="Visibility" Value="Visible" />
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding Malz3, TargetNullValue=''}" Value="">
+                                                        <Setter Property="Visibility" Value="Hidden" />
+                                                        <Setter Property="Height" Value="0" />
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </StackPanel.Style>
+                                        <TextBlock Text="{Binding Malz3, StringFormat=' {0}:'}" HorizontalAlignment="Center" FontSize="14" />
+                                        <TextBlock Text="{Binding Malz3_Menge, StringFormat=' {0}'}" HorizontalAlignment="Center" FontSize="14" />
+                                        <TextBlock Text="{Binding Malz3_Einheit, StringFormat=' {0}'}" HorizontalAlignment="Center" FontSize="14" />
+                                    </StackPanel>
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                        <StackPanel.Style>
+                                            <Style TargetType="StackPanel">
+                                                <Setter Property="Visibility" Value="Visible" />
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding Malz4, TargetNullValue=''}" Value="">
+                                                        <Setter Property="Visibility" Value="Hidden" />
+                                                        <Setter Property="Height" Value="0" />
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </StackPanel.Style>
+                                        <TextBlock Text="{Binding Malz4, StringFormat=' {0}:'}" HorizontalAlignment="Center" FontSize="14" />
+                                        <TextBlock Text="{Binding Malz4_Menge, StringFormat=' {0}'}" HorizontalAlignment="Center" FontSize="14" />
+                                        <TextBlock Text="{Binding Malz4_Einheit, StringFormat=' {0}'}" HorizontalAlignment="Center" FontSize="14" />
+                                    </StackPanel>
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                        <StackPanel.Style>
+                                            <Style TargetType="StackPanel">
+                                                <Setter Property="Visibility" Value="Visible" />
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding Malz5, TargetNullValue=''}" Value="">
+                                                        <Setter Property="Visibility" Value="Hidden" />
+                                                        <Setter Property="Height" Value="0" />
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </StackPanel.Style>
+                                        <TextBlock Text="{Binding Malz5, StringFormat=' {0}:'}" HorizontalAlignment="Center" FontSize="14" />
+                                        <TextBlock Text="{Binding Malz5_Menge, StringFormat=' {0}'}" HorizontalAlignment="Center" FontSize="14" />
+                                        <TextBlock Text="{Binding Malz5_Einheit, StringFormat=' {0}'}" HorizontalAlignment="Center" FontSize="14" />
+                                    </StackPanel>
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                        <StackPanel.Style>
+                                            <Style TargetType="StackPanel">
+                                                <Setter Property="Visibility" Value="Visible" />
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding Malz6, TargetNullValue=''}" Value="">
+                                                        <Setter Property="Visibility" Value="Hidden" />
+                                                        <Setter Property="Height" Value="0" />
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </StackPanel.Style>
+                                        <TextBlock Text="{Binding Malz6, StringFormat=' {0}:'}" HorizontalAlignment="Center" FontSize="14" />
+                                        <TextBlock Text="{Binding Malz6_Menge, StringFormat=' {0}'}" HorizontalAlignment="Center" FontSize="14" />
+                                        <TextBlock Text="{Binding Malz6_Einheit, StringFormat=' {0}'}" HorizontalAlignment="Center" FontSize="14" />
+                                    </StackPanel>
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                        <StackPanel.Style>
+                                            <Style TargetType="StackPanel">
+                                                <Setter Property="Visibility" Value="Visible" />
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding Malz7, TargetNullValue=''}" Value="">
+                                                        <Setter Property="Visibility" Value="Hidden" />
+                                                        <Setter Property="Height" Value="0" />
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </StackPanel.Style>
+                                        <TextBlock Text="{Binding Malz7, StringFormat=' {0}:'}" HorizontalAlignment="Center" FontSize="14" />
+                                        <TextBlock Text="{Binding Malz7_Menge, StringFormat=' {0}'}" HorizontalAlignment="Center" FontSize="14" />
+                                        <TextBlock Text="{Binding Malz7_Einheit, StringFormat=' {0}'}" HorizontalAlignment="Center" FontSize="14" />
+                                    </StackPanel>
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                        <StackPanel.Style>
+                                            <Style TargetType="StackPanel">
+                                                <Setter Property="Visibility" Value="Visible" />
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding Malz8, TargetNullValue=''}" Value="">
+                                                        <Setter Property="Visibility" Value="Hidden" />
+                                                        <Setter Property="Height" Value="0" />
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </StackPanel.Style>
+
+                                        <TextBlock Text="{Binding Malz8, StringFormat=' {0}:'}" HorizontalAlignment="Center" FontSize="14" />
+                                        <TextBlock Text="{Binding Malz8_Menge, StringFormat=' {0}'}" HorizontalAlignment="Center" FontSize="14" />
+                                        <TextBlock Text="{Binding Malz8_Einheit, StringFormat=' {0}'}" HorizontalAlignment="Center" FontSize="14" />
+                                    </StackPanel>
+
+                                    <TextBlock Text="Maischplan" HorizontalAlignment="Left" FontSize="17" FontWeight="Bold" TextAlignment="Left" />
+
+                                    <TextBlock Text="{Binding Infusion_Einmaischtemperatur, StringFormat='Einmaischtemperatur: {0} °C'}" HorizontalAlignment="Center" FontSize="14" />
+
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                        <StackPanel.Style>
+                                            <Style TargetType="StackPanel">
+                                                <Setter Property="Visibility" Value="Visible" />
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding Infusion_Rasttemperatur1, TargetNullValue=''}" Value="">
+                                                        <Setter Property="Visibility" Value="Hidden" />
+                                                        <Setter Property="Height" Value="0" />
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </StackPanel.Style>
+                                        <TextBlock Text="{Binding Infusion_Rasttemperatur1, StringFormat='1. Rast: {0} °C für'}" HorizontalAlignment="Center" FontSize="14" />
+                                        <TextBlock Text="{Binding Infusion_Rastzeit1, StringFormat=' {0} min'}" HorizontalAlignment="Center" FontSize="14" />
+                                    </StackPanel>
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                        <StackPanel.Style>
+                                            <Style TargetType="StackPanel">
+                                                <Setter Property="Visibility" Value="Visible" />
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding Infusion_Rasttemperatur2, TargetNullValue=''}" Value="">
+                                                        <Setter Property="Visibility" Value="Hidden" />
+                                                        <Setter Property="Height" Value="0" />
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </StackPanel.Style>
+                                        <TextBlock Text="{Binding Infusion_Rasttemperatur2, StringFormat='2. Rast: {0} °C für'}" HorizontalAlignment="Center" FontSize="14" />
+                                        <TextBlock Text="{Binding Infusion_Rastzeit2, StringFormat=' {0} min'}" HorizontalAlignment="Center" FontSize="14" />
+                                    </StackPanel>
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                        <StackPanel.Style>
+                                            <Style TargetType="StackPanel">
+                                                <Setter Property="Visibility" Value="Visible" />
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding Infusion_Rasttemperatur3, TargetNullValue=''}" Value="">
+                                                        <Setter Property="Visibility" Value="Hidden" />
+                                                        <Setter Property="Height" Value="0" />
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </StackPanel.Style>
+                                        <TextBlock Text="{Binding Infusion_Rasttemperatur3, StringFormat='3. Rast: {0} °C für'}" HorizontalAlignment="Center" FontSize="14" />
+                                        <TextBlock Text="{Binding Infusion_Rastzeit3, StringFormat=' {0} min'}" HorizontalAlignment="Center" FontSize="14" />
+                                    </StackPanel>
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                        <StackPanel.Style>
+                                            <Style TargetType="StackPanel">
+                                                <Setter Property="Visibility" Value="Visible" />
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding Infusion_Rasttemperatur4, TargetNullValue=''}" Value="">
+                                                        <Setter Property="Visibility" Value="Hidden" />
+                                                        <Setter Property="Height" Value="0" />
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </StackPanel.Style>
+                                        <TextBlock Text="{Binding Infusion_Rasttemperatur4, StringFormat='4. Rast: {0} °C für'}" HorizontalAlignment="Center" FontSize="14" />
+                                        <TextBlock Text="{Binding Infusion_Rastzeit4, StringFormat=' {0} min'}" HorizontalAlignment="Center" FontSize="14" />
+                                    </StackPanel>
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                        <StackPanel.Style>
+                                            <Style TargetType="StackPanel">
+                                                <Setter Property="Visibility" Value="Visible" />
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding Infusion_Rasttemperatur5, TargetNullValue=''}" Value="">
+                                                        <Setter Property="Visibility" Value="Hidden" />
+                                                        <Setter Property="Height" Value="0" />
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </StackPanel.Style>
+                                        <TextBlock Text="{Binding Infusion_Rasttemperatur5, StringFormat='5. Rast: {0} °C für'}" HorizontalAlignment="Center" FontSize="14" />
+                                        <TextBlock Text="{Binding Infusion_Rastzeit5, StringFormat=' {0} min'}" HorizontalAlignment="Center" FontSize="14" />
+                                    </StackPanel>
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                        <StackPanel.Style>
+                                            <Style TargetType="StackPanel">
+                                                <Setter Property="Visibility" Value="Visible" />
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding Infusion_Rasttemperatur6, TargetNullValue=''}" Value="">
+                                                        <Setter Property="Visibility" Value="Hidden" />
+                                                        <Setter Property="Height" Value="0" />
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </StackPanel.Style>
+                                        <TextBlock Text="{Binding Infusion_Rasttemperatur6, StringFormat='6. Rast: {0} °C für'}" HorizontalAlignment="Center" FontSize="14" />
+                                        <TextBlock Text="{Binding Infusion_Rastzeit6, StringFormat=' {0} min'}" HorizontalAlignment="Center" FontSize="14" />
+                                    </StackPanel>
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                        <StackPanel.Style>
+                                            <Style TargetType="StackPanel">
+                                                <Setter Property="Visibility" Value="Visible" />
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding Infusion_Rasttemperatur7, TargetNullValue=''}" Value="">
+                                                        <Setter Property="Visibility" Value="Hidden" />
+                                                        <Setter Property="Height" Value="0" />
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </StackPanel.Style>
+                                        <TextBlock Text="{Binding Infusion_Rasttemperatur7, StringFormat='7. Rast: {0} °C für'}" HorizontalAlignment="Center" FontSize="14" />
+                                        <TextBlock Text="{Binding Infusion_Rastzeit7, StringFormat=' {0} min'}" HorizontalAlignment="Center" FontSize="14" />
+                                    </StackPanel>
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                        <StackPanel.Style>
+                                            <Style TargetType="StackPanel">
+                                                <Setter Property="Visibility" Value="Visible" />
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding Infusion_Rasttemperatur8, TargetNullValue=''}" Value="">
+                                                        <Setter Property="Visibility" Value="Hidden" />
+                                                        <Setter Property="Height" Value="0" />
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </StackPanel.Style>
+                                        <TextBlock Text="{Binding Infusion_Rasttemperatur8, StringFormat='8. Rast: {0} °C für'}" HorizontalAlignment="Center" FontSize="14" />
+                                        <TextBlock Text="{Binding Infusion_Rastzeit8, StringFormat=' {0} min'}" HorizontalAlignment="Center" FontSize="14" />
+                                    </StackPanel>
+
+                                    <TextBlock Text="{Binding Abmaischtemperatur, StringFormat='Abmaischtemperatur: {0} °C'}" HorizontalAlignment="Center" FontSize="14" />
+
+                                    <TextBlock Text="Würzekochen" HorizontalAlignment="Left" FontSize="17" FontWeight="Bold" TextAlignment="Left" />
+
+                                    <TextBlock Text="{Binding Kochzeit_Wuerze, StringFormat='Würzekochzeit: {0} min'}" HorizontalAlignment="Center" FontSize="14" />
+
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                        <StackPanel.Style>
+                                            <Style TargetType="StackPanel">
+                                                <Setter Property="Visibility" Value="Visible" />
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding Hopfen_VWH_1_Sorte, TargetNullValue=''}" Value="">
+                                                        <Setter Property="Visibility" Value="Hidden" />
+                                                        <Setter Property="Height" Value="0" />
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </StackPanel.Style>
+                                        <TextBlock Text="{Binding Hopfen_VWH_1_Sorte, StringFormat=' {0} (Vorderwürze):'}" HorizontalAlignment="Center" FontSize="14" />
+                                        <TextBlock Text="{Binding Hopfen_VWH_1_Menge, StringFormat=' {0} g,'}" HorizontalAlignment="Center" FontSize="14" />
+                                        <TextBlock Text="{Binding Hopfen_VWH_1_alpha, StringFormat=' {0} a-Säure'}" HorizontalAlignment="Center" FontSize="14" />
+                                    </StackPanel>
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                        <StackPanel.Style>
+                                            <Style TargetType="StackPanel">
+                                                <Setter Property="Visibility" Value="Visible" />
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding Hopfen_VWH_2_Sorte, TargetNullValue=''}" Value="">
+                                                        <Setter Property="Visibility" Value="Hidden" />
+                                                        <Setter Property="Height" Value="0" />
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </StackPanel.Style>
+                                        <TextBlock Text="{Binding Hopfen_VWH_2_Sorte, StringFormat=' {0} (Vorderwürze):'}" HorizontalAlignment="Center" FontSize="14" />
+                                        <TextBlock Text="{Binding Hopfen_VWH_2_Menge, StringFormat=' {0} g,'}" HorizontalAlignment="Center" FontSize="14" />
+                                        <TextBlock Text="{Binding Hopfen_VWH_2_alpha, StringFormat=' {0} a-Säure'}" HorizontalAlignment="Center" FontSize="14" />
+                                    </StackPanel>
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                        <StackPanel.Style>
+                                            <Style TargetType="StackPanel">
+                                                <Setter Property="Visibility" Value="Visible" />
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding Hopfen_VWH_3_Sorte, TargetNullValue=''}" Value="">
+                                                        <Setter Property="Visibility" Value="Hidden" />
+                                                        <Setter Property="Height" Value="0" />
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </StackPanel.Style>
+                                        <TextBlock Text="{Binding Hopfen_VWH_3_Sorte, StringFormat=' {0} (Vorderwürze):'}" HorizontalAlignment="Center" FontSize="14" />
+                                        <TextBlock Text="{Binding Hopfen_VWH_3_Menge, StringFormat=' {0} g,'}" HorizontalAlignment="Center" FontSize="14" />
+                                        <TextBlock Text="{Binding Hopfen_VWH_3_alpha, StringFormat=' {0} a-Säure'}" HorizontalAlignment="Center" FontSize="14" />
+                                    </StackPanel>
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                        <StackPanel.Style>
+                                            <Style TargetType="StackPanel">
+                                                <Setter Property="Visibility" Value="Visible" />
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding Hopfen_VWH_4_Sorte, TargetNullValue=''}" Value="">
+                                                        <Setter Property="Visibility" Value="Hidden" />
+                                                        <Setter Property="Height" Value="0" />
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </StackPanel.Style>
+                                        <TextBlock Text="{Binding Hopfen_VWH_4_Sorte, StringFormat=' {0} (Vorderwürze):'}" HorizontalAlignment="Center" FontSize="14" />
+                                        <TextBlock Text="{Binding Hopfen_VWH_4_Menge, StringFormat=' {0} g,'}" HorizontalAlignment="Center" FontSize="14" />
+                                        <TextBlock Text="{Binding Hopfen_VWH_4_alpha, StringFormat=' {0} a-Säure'}" HorizontalAlignment="Center" FontSize="14" />
+                                    </StackPanel>
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                        <StackPanel.Style>
+                                            <Style TargetType="StackPanel">
+                                                <Setter Property="Visibility" Value="Visible" />
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding Hopfen_VWH_5_Sorte, TargetNullValue=''}" Value="">
+                                                        <Setter Property="Visibility" Value="Hidden" />
+                                                        <Setter Property="Height" Value="0" />
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </StackPanel.Style>
+                                        <TextBlock Text="{Binding Hopfen_VWH_5_Sorte, StringFormat=' {0} (Vorderwürze):'}" HorizontalAlignment="Center" FontSize="14" />
+                                        <TextBlock Text="{Binding Hopfen_VWH_5_Menge, StringFormat=' {0} g,'}" HorizontalAlignment="Center" FontSize="14" />
+                                        <TextBlock Text="{Binding Hopfen_VWH_5_alpha, StringFormat=' {0} a-Säure'}" HorizontalAlignment="Center" FontSize="14" />
+                                    </StackPanel>
+
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                        <StackPanel.Style>
+                                            <Style TargetType="StackPanel">
+                                                <Setter Property="Visibility" Value="Visible" />
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding Hopfen_1_Sorte, TargetNullValue=''}" Value="">
+                                                        <Setter Property="Visibility" Value="Hidden" />
+                                                        <Setter Property="Height" Value="0" />
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </StackPanel.Style>
+                                        <TextBlock Text="{Binding Hopfen_1_Sorte, StringFormat=' {0}:'}" HorizontalAlignment="Center" FontSize="14" />
+                                        <TextBlock Text="{Binding Hopfen_1_Menge, StringFormat=' {0} g,'}" HorizontalAlignment="Center" FontSize="14" />
+                                        <TextBlock Text="{Binding Hopfen_1_alpha, StringFormat=' {0} a-Säure,'}" HorizontalAlignment="Center" FontSize="14" />
+                                        <TextBlock Text="{Binding Hopfen_1_Kochzeit, StringFormat=' {0} min '}" HorizontalAlignment="Center" FontSize="14" />
+                                    </StackPanel>
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                        <StackPanel.Style>
+                                            <Style TargetType="StackPanel">
+                                                <Setter Property="Visibility" Value="Visible" />
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding Hopfen_2_Sorte, TargetNullValue=''}" Value="">
+                                                        <Setter Property="Visibility" Value="Hidden" />
+                                                        <Setter Property="Height" Value="0" />
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </StackPanel.Style>
+                                        <TextBlock Text="{Binding Hopfen_2_Sorte, StringFormat=' {0}:'}" HorizontalAlignment="Center" FontSize="14" />
+                                        <TextBlock Text="{Binding Hopfen_2_Menge, StringFormat=' {0} g,'}" HorizontalAlignment="Center" FontSize="14" />
+                                        <TextBlock Text="{Binding Hopfen_2_alpha, StringFormat=' {0} a-Säure,'}" HorizontalAlignment="Center" FontSize="14" />
+                                        <TextBlock Text="{Binding Hopfen_2_Kochzeit, StringFormat=' {0} min '}" HorizontalAlignment="Center" FontSize="14" />
+                                    </StackPanel>
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                        <StackPanel.Style>
+                                            <Style TargetType="StackPanel">
+                                                <Setter Property="Visibility" Value="Visible" />
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding Hopfen_3_Sorte, TargetNullValue=''}" Value="">
+                                                        <Setter Property="Visibility" Value="Hidden" />
+                                                        <Setter Property="Height" Value="0" />
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </StackPanel.Style>
+                                        <TextBlock Text="{Binding Hopfen_3_Sorte, StringFormat=' {0}:'}" HorizontalAlignment="Center" FontSize="14" />
+                                        <TextBlock Text="{Binding Hopfen_3_Menge, StringFormat=' {0} g,'}" HorizontalAlignment="Center" FontSize="14" />
+                                        <TextBlock Text="{Binding Hopfen_3_alpha, StringFormat=' {0} a-Säure,'}" HorizontalAlignment="Center" FontSize="14" />
+                                        <TextBlock Text="{Binding Hopfen_3_Kochzeit, StringFormat=' {0} min '}" HorizontalAlignment="Center" FontSize="14" />
+                                    </StackPanel>
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                        <StackPanel.Style>
+                                            <Style TargetType="StackPanel">
+                                                <Setter Property="Visibility" Value="Visible" />
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding Hopfen_4_Sorte, TargetNullValue=''}" Value="">
+                                                        <Setter Property="Visibility" Value="Hidden" />
+                                                        <Setter Property="Height" Value="0" />
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </StackPanel.Style>
+                                        <TextBlock Text="{Binding Hopfen_4_Sorte, StringFormat=' {0}:'}" HorizontalAlignment="Center" FontSize="14" />
+                                        <TextBlock Text="{Binding Hopfen_4_Menge, StringFormat=' {0} g,'}" HorizontalAlignment="Center" FontSize="14" />
+                                        <TextBlock Text="{Binding Hopfen_4_alpha, StringFormat=' {0} a-Säure,'}" HorizontalAlignment="Center" FontSize="14" />
+                                        <TextBlock Text="{Binding Hopfen_4_Kochzeit, StringFormat=' {0} min '}" HorizontalAlignment="Center" FontSize="14" />
+                                    </StackPanel>
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                        <StackPanel.Style>
+                                            <Style TargetType="StackPanel">
+                                                <Setter Property="Visibility" Value="Visible" />
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding Hopfen_5_Sorte, TargetNullValue=''}" Value="">
+                                                        <Setter Property="Visibility" Value="Hidden" />
+                                                        <Setter Property="Height" Value="0" />
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </StackPanel.Style>
+                                        <TextBlock Text="{Binding Hopfen_5_Sorte, StringFormat=' {0}:'}" HorizontalAlignment="Center" FontSize="14" />
+                                        <TextBlock Text="{Binding Hopfen_5_Menge, StringFormat=' {0} g,'}" HorizontalAlignment="Center" FontSize="14" />
+                                        <TextBlock Text="{Binding Hopfen_5_alpha, StringFormat=' {0} a-Säure,'}" HorizontalAlignment="Center" FontSize="14" />
+                                        <TextBlock Text="{Binding Hopfen_5_Kochzeit, StringFormat=' {0} min '}" HorizontalAlignment="Center" FontSize="14" />
+                                    </StackPanel>
+
+                                    <TextBlock Text="Gärung und Reifung" HorizontalAlignment="Left" FontSize="17" FontWeight="Bold" TextAlignment="Left" />
+
+                                    <TextBlock Text="{Binding Hefe, StringFormat='Hefe: {0}'}" HorizontalAlignment="Center" FontSize="14" />
+                                    <TextBlock Text="{Binding Gaertemperatur, StringFormat='Gärtemperatur: {0} °C'}" HorizontalAlignment="Center" FontSize="14" />
+                                    <TextBlock Text="{Binding Endvergaerungsgrad, StringFormat='Endvergärungsgrad: {0}%'}" HorizontalAlignment="Center" FontSize="14" />
+                                    <TextBlock Text="{Binding Karbonisierung, StringFormat='Karbonisierung: {0} g/l'}" HorizontalAlignment="Center" FontSize="14" />
+                                </StackPanel>
+                            </ScrollViewer>
+                        </Grid>
+                    </TabItem>
+                    <!--#endregion-->
+                    <!--#region Verbindung-->
+                    <TabItem Header="Verbindung" Height="30" Visibility="Visible">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="150" />
+                                <ColumnDefinition />
+                            </Grid.ColumnDefinitions>
+
+                            <Grid.RowDefinitions>
+                                <RowDefinition />
+                                <RowDefinition />
+                            </Grid.RowDefinitions>
+
+                            <StackPanel Margin="10">
+                                <Label Content="Port" />
+                                <StackPanel Orientation="Horizontal">
+                                    <ComboBox Name="cmbPorts" Width="75" Margin="10 0 10 0" VerticalAlignment="Center" />
+                                    <Button x:Name="btnRefPorts" Width="22" Height="22" Click="btnRefPorts_Click">
+                                        <Image Source="Images/arrow_refresh.png" Stretch="None" />
+                                    </Button>
+                                </StackPanel>
+
+                                <Label Content="Baudrate" />
+                                <TextBox Text="115200" Margin="10 0 10 0" />
+                                <Button Height="30" Margin="0 10 0 0">
+                                    <StackPanel Orientation="Horizontal">
+                                        <Image Source="Images/lightning.png" Width="16" Height="16" />
+                                        <Label Content="Verbinden" />
+                                    </StackPanel>
+                                </Button>
+                            </StackPanel>
+
+                            <TextBox x:FieldModifier="public" x:Name="txtLog" Grid.Column="1" HorizontalAlignment="Left" Height="133" Margin="107,44,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="352" />
+                        </Grid>
+                    </TabItem>
+                    <!--#endregion-->
+                    <!--#region Einstellungen-->
+                    <TabItem Header="Einstellungen" Height="30" Visibility="Visible">
+                        Einstellungen
+                    </TabItem>
+                    <!--#endregion-->
+                </TabControl>
+            </Grid>
         </DockPanel>
 
-
         <!--#endregion-->
-
     </Grid>
 </Window>

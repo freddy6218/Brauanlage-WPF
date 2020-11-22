@@ -1,20 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.IO.Ports;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using System.IO.Ports;
-using System.Threading;
-using Brauanlage_WPF.Pages;
 
 namespace Brauanlage_WPF
 {
@@ -33,36 +22,85 @@ namespace Brauanlage_WPF
         public MainWindow()
         {
             InitializeComponent();
-            Navigate("Pages/HomePage.xaml", "Startseite");
+
+            Navigate("Startseite");
+
+            getComPorts();
         }
 
-        private void Navigate(string path, string headerText)
+        private void getComPorts()
         {
-            _NavigationFrame.Navigate(new Uri(path, UriKind.Relative));
+            string[] ports = SerialPort.GetPortNames();
+
+            cmbPorts.Items.Clear();
+
+            foreach (string portName in ports)
+            {
+                cmbPorts.Items.Add(portName);
+            }
+
+            if (cmbPorts.Items.Count > 0)
+                cmbPorts.SelectedIndex = 0;
+        }
+
+        private void getRecipes()
+        {
+            if (Recipes.LeseRezepte("Rezepte") == 0)
+            {
+                lstRecipe.ItemsSource = null;
+                lstRecipe.ItemsSource = Recipes.RezepteListe;
+
+                if (lstRecipe.Items.Count > 1)
+                    ChangeStatus($"{lstRecipe.Items.Count} Rezepte wurden ausgelesen.", MainWindow.IconType.Information);
+                else
+                    ChangeStatus("1 Rezept wurde ausgelesen.", MainWindow.IconType.Information);
+
+                lstRecipe.SelectedIndex = 0;
+            }
+            else
+                ChangeStatus("Ein Fehler beim auslesen der Rezepte ist aufgetreten!", MainWindow.IconType.Error);
+        }
+
+        private void Navigate(string headerText)
+        {
+            foreach (TabItem item in TabMain.Items)
+            {
+                if (item.Header.ToString() == headerText)
+                    item.IsSelected = true;
+                else
+                    item.IsSelected = false;
+            }
+
             Header.Content = headerText;
         }
 
         private void nav_HomePage_Click(object sender, RoutedEventArgs e)
         {
-            Navigate("Pages/HomePage.xaml", "Startseite");
+            Navigate("Startseite");
         }
 
         private void nav_RecipePage_Click(object sender, RoutedEventArgs e)
         {
-            Navigate("Pages/RecipePage.xaml", "Rezepte");
+            getRecipes();
+            Navigate("Rezepte");
         }
 
         private void navConnPage_Click(object sender, RoutedEventArgs e)
         {
-            Navigate("Pages/ConnectionPage.xaml", "Verbindung");
+            Navigate("Verbindung");
         }
 
         private void navSettings_Click(object sender, RoutedEventArgs e)
         {
-            Navigate("Pages/SettingsPage.xaml", "Einstellungen");
+            Navigate("Einstellungen");
         }
 
-        public static void ChangeStatus(string strMessage, IconType icon)
+        /// <summary>
+        /// Legt den anzuzeigenden Status in der StatusBar des Hauptfensters fest
+        /// </summary>
+        /// <param name="strMessage">Statusnachricht</param>
+        /// <param name="icon">Statusicon</param>
+        public void ChangeStatus(string strMessage, IconType icon)
         {
             string strSource = "";
 
@@ -73,17 +111,25 @@ namespace Brauanlage_WPF
                 case IconType.Information:
                     strSource = "Images/information.png";
                     break;
+
                 case IconType.Error:
                     strSource = "Images/exclamation.png";
                     break;
+
                 case IconType.Warning:
                     strSource = "Images/error.png";
                     break;
+
                 default:
                     break;
             }
 
-            _statImage.Source = new BitmapImage(new Uri($"ms-appx:///{strSource}"));
+            _statImage.Source = new BitmapImage(new Uri($"pack://application:,,,/{strSource}"));
+        }
+
+        private void btnRefPorts_Click(object sender, RoutedEventArgs e)
+        {
+            getComPorts();
         }
     }
 }
