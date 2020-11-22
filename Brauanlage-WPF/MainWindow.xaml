@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Brauanlage_WPF"
         mc:Ignorable="d"
-        Title="Brauanlage - Steuerung" Height="720" Width="1280" MinHeight="600" MinWidth="800">
+        Title="Brauanlage - Steuerung" Height="720" Width="1280" MinHeight="600" MinWidth="800" ResizeMode="CanResizeWithGrip">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition/>
@@ -26,7 +26,12 @@
         
         <!--#region Status Bar-->
         <StatusBar Grid.Row="1" Grid.ColumnSpan="3">
-            <StatusBarItem Content="Test"/>
+            <StatusBarItem>
+                <Image x:Name="_statImage" Source="Images/information.png"/>
+            </StatusBarItem>
+            <StatusBarItem>
+                <TextBlock x:Name="_statText" Text="Brauanlage - Steuerung wurde gestartet!"/>
+            </StatusBarItem>
         </StatusBar>
 
         <!--#endregion-->
@@ -83,12 +88,10 @@
         <!--#region Content-->
         <DockPanel  Margin="10 10 10 10" Grid.Row="0" Grid.Column="2">
             <Label DockPanel.Dock="Top" x:Name="Header" Content="Header" Height="35" FontSize="18" FontWeight="Bold"/>
-            
+
             <ScrollViewer HorizontalAlignment="Stretch" VerticalAlignment="Stretch" MinHeight="500">
                 <Frame x:Name="_NavigationFrame" NavigationUIVisibility="Hidden" />
             </ScrollViewer>
-            
-            
             
         </DockPanel>
 

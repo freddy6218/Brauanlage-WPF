@@ -20,9 +20,20 @@ namespace Brauanlage_WPF.Pages
     /// </summary>
     public partial class RecipePage : Page
     {
+
         public RecipePage()
         {
             InitializeComponent();
+        }
+
+        private void Grid_Loaded(object sender, RoutedEventArgs e)
+        {
+            if (Recipes.LeseRezepte("Rezepte") != 0)            
+                MainWindow.ChangeStatus("Ein Fehler beim auslesen der Rezepte ist aufgetreten!", MainWindow.IconType.Error);
+            else
+                MainWindow.ChangeStatus("Die Rezepte wurden ausgelesen.", MainWindow.IconType.Information);
+
+
         }
     }
 }

@@ -23,6 +23,12 @@ namespace Brauanlage_WPF
     /// </summary>
     public partial class MainWindow : Window
     {
+        public enum IconType
+        {
+            Information = 0,
+            Error = 1,
+            Warning = 2
+        }
 
         public MainWindow()
         {
@@ -32,8 +38,8 @@ namespace Brauanlage_WPF
 
         private void Navigate(string path, string headerText)
         {
-            this._NavigationFrame.Navigate(new Uri(path, UriKind.Relative));
-            this.Header.Content = headerText;
+            _NavigationFrame.Navigate(new Uri(path, UriKind.Relative));
+            Header.Content = headerText;
         }
 
         private void nav_HomePage_Click(object sender, RoutedEventArgs e)
@@ -54,6 +60,30 @@ namespace Brauanlage_WPF
         private void navSettings_Click(object sender, RoutedEventArgs e)
         {
             Navigate("Pages/SettingsPage.xaml", "Einstellungen");
+        }
+
+        public static void ChangeStatus(string strMessage, IconType icon)
+        {
+            string strSource = "";
+
+            _statText.Text = strMessage;
+
+            switch (icon)
+            {
+                case IconType.Information:
+                    strSource = "Images/information.png";
+                    break;
+                case IconType.Error:
+                    strSource = "Images/exclamation.png";
+                    break;
+                case IconType.Warning:
+                    strSource = "Images/error.png";
+                    break;
+                default:
+                    break;
+            }
+
+            _statImage.Source = new BitmapImage(new Uri($"ms-appx:///{strSource}"));
         }
     }
 }
