@@ -32,6 +32,9 @@
             <StatusBarItem>
                 <TextBlock x:Name="_statText" Text="Brauanlagensteuerung wurde gestartet!" />
             </StatusBarItem>
+            <StatusBarItem HorizontalAlignment="Right">
+                <Image x:Name="_statConnImage" Source="Images/bullet_red.png" />
+            </StatusBarItem>
         </StatusBar>
 
         <!--#endregion-->
@@ -43,7 +46,7 @@
                     <DropShadowEffect Color="#FF727272" ShadowDepth="2" />
                 </Button.Effect>
                 <StackPanel Orientation="Horizontal">
-                    <Image Source="Images/application_home.png" Height="16" Width="16" Margin="0" />
+                    <Image Source="Images/house.png" Height="16" Width="16" Margin="0" />
                     <Label Content="Startseite" />
                 </StackPanel>
             </Button>
@@ -67,6 +70,16 @@
                 <StackPanel Orientation="Horizontal">
                     <Image Source="Images/server_go.png" Height="16" Width="16" />
                     <Label Content="Verbindung" />
+                </StackPanel>
+            </Button>
+
+            <Button x:Name="navInOutPage" Margin="10,10,10,0" Height="30" FontWeight="Bold" Click="navInOutPage_Click">
+                <Button.Effect>
+                    <DropShadowEffect Color="#FF727272" ShadowDepth="2" />
+                </Button.Effect>
+                <StackPanel Orientation="Horizontal">
+                    <Image Source="Images/lightning.png" Height="16" Width="16" />
+                    <Label Content="Ein-/Ausgänge" />
                 </StackPanel>
             </Button>
 
@@ -102,21 +115,35 @@
                                 <ColumnDefinition Width="99*" />
                             </Grid.ColumnDefinitions>
 
-                            <ListView x:Name="lstRecipe" Margin="10" Grid.Column="0">
-                                <ListView.View>
-                                    <GridView>
-                                        <GridView.Columns>
-                                            <GridViewColumn Header="Name" Width="150" DisplayMemberBinding="{Binding Name}" />
-                                            <GridViewColumn Header="Sorte" Width="140" DisplayMemberBinding="{Binding Sorte}" />
-                                            <GridViewColumn Header="Stammwürze" Width="75" DisplayMemberBinding="{Binding Stammwuerze}" />
-                                            <GridViewColumn Header="Alkohol" Width="65" DisplayMemberBinding="{Binding Alkohol}" />
-                                        </GridView.Columns>
-                                    </GridView>
-                                </ListView.View>
-                            </ListView>
+                            <DockPanel Grid.Column="0">
+                                <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Margin="10,10,10,0">
+
+                                    <Button ToolTip="Importiere ein vorhandenes Rezept..." Height="20">
+                                        <Image Source="Images/add.png" />
+                                    </Button>
+
+                                    <Button ToolTip="Lösche ausgewähltes Rezept aus der Liste" Height="20" Margin="5,0,0,0">
+                                        <Image Source="Images/delete.png" />
+                                    </Button>
+                                </StackPanel>
+
+                                <ListView x:Name="lstRecipe" Margin="10">
+                                    <ListView.View>
+                                        <GridView>
+                                            <GridView.Columns>
+                                                <GridViewColumn Header="Name" Width="150" DisplayMemberBinding="{Binding Name}" />
+                                                <GridViewColumn Header="Sorte" Width="140" DisplayMemberBinding="{Binding Sorte}" />
+                                                <GridViewColumn Header="Stammwürze" Width="75" DisplayMemberBinding="{Binding Stammwuerze}" />
+                                                <GridViewColumn Header="Alkohol" Width="65" DisplayMemberBinding="{Binding Alkohol}" />
+                                            </GridView.Columns>
+                                        </GridView>
+                                    </ListView.View>
+                                </ListView>
+                            </DockPanel>
+
                             <ScrollViewer Grid.Column="1">
                                 <StackPanel Orientation="Vertical" Margin="10">
-                                    <TextBlock Text="{Binding Name}" HorizontalAlignment="Center" FontSize="14" FontWeight="Bold" />
+                                    <TextBlock Text="{Binding Name}" HorizontalAlignment="Center" FontSize="16" FontWeight="Bold" />
                                     <TextBlock Text="{Binding Sorte}" HorizontalAlignment="Center" FontSize="14" />
                                     <TextBlock Text="{Binding Ausschlagswuerze, StringFormat='Für {0}l Ausschlagwürze'}" HorizontalAlignment="Center" FontSize="14" />
                                     <TextBlock Text="{Binding Sudhausausbeute, StringFormat='Bei {0}% Sudhausausbeute'}" HorizontalAlignment="Center" FontSize="14" />
@@ -601,16 +628,32 @@
                                 </StackPanel>
 
                                 <Label Content="Baudrate" />
-                                <TextBox Text="115200" Margin="10 0 10 0" />
-                                <Button Height="30" Margin="0 10 0 0">
+                                <TextBox x:Name="txtBaud" Text="115200" Margin="10 0 10 0" />
+                                <Label Content="Status"/>
+                                <TextBlock x:Name="txtConnStatus" Text="Nicht verbunden" Margin="10 0 10 0" FontWeight="DemiBold" IsEnabled="False"/>
+
+                                <Button x:Name="btnConnSerial" Height="30" Margin="0 10 0 0" Click="btnConnSerial_Click">
                                     <StackPanel Orientation="Horizontal">
                                         <Image Source="Images/lightning.png" Width="16" Height="16" />
-                                        <Label Content="Verbinden" />
+                                        <Label x:Name="btnConnSerialText" Content="Verbinden" FontWeight="DemiBold" />
                                     </StackPanel>
                                 </Button>
                             </StackPanel>
+                            <DockPanel Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2">
+                                <StackPanel Orientation="Vertical" DockPanel.Dock="Top" Margin="10 10 0 0">
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Text="Verbindungslog" HorizontalAlignment="Left" FontSize="14" FontWeight="Bold" TextAlignment="Left" />
+                                        <Button x:Name="btnClearConnLog" ToolTip="Verbindungslog leeren" Width="22" Height="22" Margin="10 0 0 0" Click="btnClearConnLog_Click">
+                                            <Image Source="Images/table_delete.png" Stretch="None" />
+                                        </Button>
+                                    </StackPanel>
+                                    
+                                
 
-                            <TextBox x:FieldModifier="public" x:Name="txtLog" Grid.Column="1" HorizontalAlignment="Left" Height="133" Margin="107,44,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="352" />
+                                </StackPanel>
+                                <TextBox x:FieldModifier="public" x:Name="txtLog" Margin="10" TextWrapping="Wrap" VerticalScrollBarVisibility="Auto" IsReadOnly="True"/>
+                            </DockPanel>
+                            
                         </Grid>
                     </TabItem>
                     <!--#endregion-->
@@ -618,6 +661,50 @@
                     <TabItem Header="Einstellungen" Height="30" Visibility="Visible">
                         Einstellungen
                     </TabItem>
+                    <!--#endregion-->
+
+                    <!--#region Ein-/Ausgänge-->
+                    <TabItem Header="Ein-/Ausgänge" Height="30" Visibility="Visible">
+                        <Grid Margin="10">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition />
+                                <ColumnDefinition />
+                                <ColumnDefinition />
+                                <ColumnDefinition />
+                            </Grid.ColumnDefinitions>
+
+                            <!--#region Relais-->
+                            <StackPanel Grid.Column="0" Orientation="Vertical">
+                                <TextBlock Text="Relais" HorizontalAlignment="Left" FontSize="17" FontWeight="Bold" TextAlignment="Left" />
+                                <Button x:Name="btnRelais1" Margin="10,10,10,0" Height="30" FontWeight="Bold" Click="btnRelais1_Click">
+                                    <StackPanel Orientation="Horizontal">
+                                        <Image Source="Images/bullet_orange.png" Height="16" Width="16" />
+                                        <Label Content="Relais 1" />
+                                    </StackPanel>
+                                </Button>
+                            </StackPanel>
+                            <!--#endregion-->
+
+                            <!--#region 24V Eingänge-->
+                            <StackPanel Grid.Column="1" Orientation="Vertical">
+                                <TextBlock Text="24V Eingänge" HorizontalAlignment="Left" FontSize="17" FontWeight="Bold" TextAlignment="Left" />
+                            </StackPanel>
+                            <!--#endregion-->
+
+                            <!--#region GND Eingänge-->
+                            <StackPanel Grid.Column="2" Orientation="Vertical">
+                                <TextBlock Text="GND Eingänge" HorizontalAlignment="Left" FontSize="17" FontWeight="Bold" TextAlignment="Left" />
+                            </StackPanel>
+                            <!--#endregion-->
+
+                            <!--#region 4...20mA Eingänge-->
+                            <StackPanel Grid.Column="3" Orientation="Vertical">
+                                <TextBlock Text="4...20mA Eingänge" HorizontalAlignment="Left" FontSize="17" FontWeight="Bold" TextAlignment="Left" />
+                            </StackPanel>
+                            <!--#endregion-->
+                        </Grid>
+                    </TabItem>
+
                     <!--#endregion-->
                 </TabControl>
             </Grid>

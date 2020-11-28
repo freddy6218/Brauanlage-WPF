@@ -63,7 +63,6 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Recipes.cs" />
-    <Compile Include="Serial.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -124,6 +123,23 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Images\arrow_refresh.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\add.png" />
+    <Resource Include="Images\delete.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\house.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\bullet_green.png" />
+    <Resource Include="Images\bullet_red.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\bullet_orange.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\table_delete.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
